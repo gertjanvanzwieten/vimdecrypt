@@ -5,6 +5,12 @@
 
 int main() {
 
+  char *pass = getpass( "password: " );
+  if ( pass[0] == '\0' ) {
+    fprintf( stderr, "empty password\n" );
+    return 1;
+  }
+
   char magic[12];
   if ( read( 0, magic, 12 ) != 12 || ! strncmp( magic, "VimCrypt~02" ) ) {
     fprintf( stderr, "input should be a vim-encrypted file\n" );
@@ -14,12 +20,6 @@ int main() {
   char salt[8], seed[8];
   if ( read( 0, salt, 8 ) != 8 || read( 0, seed, 8 ) != 8 ) {
     fprintf( stderr, "data ended prematurely\n" );
-    return 1;
-  }
-
-  char *pass = getpass( "password: " );
-  if ( pass[0] == '\0' ) {
-    fprintf( stderr, "empty password\n" );
     return 1;
   }
 

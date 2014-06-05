@@ -10,7 +10,7 @@
 #define FAIL 0
 #define STRLEN(s) strlen((char *)(s))
 #define STRCPY(d,s) strcpy((char *)(d), (char *)(s))
-#define EMSG(s) fprintf(stderr, s);
+#define EMSG(...) fprintf(stderr, __VA_ARGS__);
 #define FEAT_CRYPT
 #define _(x) (x)
 #define __ARGS(x) x

@@ -1,6 +1,24 @@
 #include "vim.h"
 
-int main() {
+int main( int argc, char *argv[] ) {
+
+  FILE *fin;
+  switch ( argc ) {
+    case 1:
+      fin = stdin;
+      break;
+    case 2:
+      fin = fopen( argv[1], "r" );
+      break;
+    default:
+      EMSG( "usage: %s [filename]\n", argv[0] )
+      return 1;
+  }
+
+  if ( ! fin ) {
+    EMSG( "failed to open file '%s'\n", argv[1] )
+    return 1;
+  }
 
   char *pass = getpass( "password: " );
   if ( pass[0] == '\0' ) {
@@ -9,13 +27,15 @@ int main() {
   }
 
   char magic[12];
-  if ( read( 0, magic, 12 ) != 12 || ! strcmp( magic, "VimCrypt~02" ) ) {
+  if ( fread( magic, 1, sizeof(magic), fin ) != sizeof(magic)
+    || ! strncmp( magic, "VimCrypt~02", sizeof(magic) ) ) {
     EMSG( "input should be a vim-encrypted file\n" );
     return 1;
   }
 
   char salt[8], seed[8];
-  if ( read( 0, salt, 8 ) != 8 || read( 0, seed, 8 ) != 8 ) {
+  if ( fread( salt, 1, sizeof(salt), fin ) != sizeof(salt)
+    || fread( seed, 1, sizeof(seed), fin ) != sizeof(seed) ) {
     EMSG( "data ended prematurely\n" );
     return 1;
   }
@@ -26,12 +46,12 @@ int main() {
   char buf[ 256 ];
   int nread;
   for ( ;; ) {
-    nread = read( 0, buf, sizeof(buf) );
+    nread = fread( buf, 1, sizeof(buf), fin );
     if ( nread == 0 ) {
       break;
     }
     bf_crypt_decode( buf, nread );
-    write( 1, buf, nread );
+    fwrite( buf, 1, nread, stdout );
   }
 
   return 0;

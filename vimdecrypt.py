@@ -10,16 +10,16 @@ ffi.cdef( '''
 blowfish = ffi.dlopen( 'blowfish.so' )
 
 def decrypt( filename ):
-  data = open( filename )
-  assert data.read(12) == 'VimCrypt~02!', 'input should be a vim-encrypted file'
-  salt = data.read(8)
-  seed = data.read(8)
-  assert len(salt) == len(seed) == 8, 'data ended prematurely'
+  with open( filename ) as data:
+    assert data.read(12) == 'VimCrypt~02!', 'input should be a vim-encrypted file'
+    salt = data.read(8)
+    seed = data.read(8)
+    assert len(salt) == len(seed) == 8, 'data ended prematurely'
+    buf = ffi.new( "unsigned char[]", data.read() )
   pw = getpass.getpass()
   assert pw, 'empty password'
   blowfish.bf_key_init( pw, salt, len(salt) )
   blowfish.bf_cfb_init( seed, len(seed) )
-  buf = ffi.new( "unsigned char[]", data.read() )
   blowfish.bf_crypt_decode( buf, len(buf)-1 );
   return ffi.string( buf )
 

@@ -2,33 +2,20 @@
 
 int main( int argc, char *argv[] ) {
 
-  FILE *fin;
-  switch ( argc ) {
-    case 1:
-      fin = stdin;
-      break;
-    case 2:
-      fin = fopen( argv[1], "r" );
-      break;
-    default:
-      EMSG( "usage: %s [filename]\n", argv[0] )
-      return 1;
+  if ( argc != 2 ) {
+    EMSG( "usage: %s [filename]\n", argv[0] )
+    return 1;
   }
 
+  FILE *fin = fopen( argv[1], "r" );
   if ( ! fin ) {
     EMSG( "failed to open file '%s'\n", argv[1] )
     return 1;
   }
 
-  char *pass = getpass( "password: " );
-  if ( pass[0] == '\0' ) {
-    EMSG( "empty password\n" );
-    return 1;
-  }
-
   char magic[12];
   if ( fread( magic, 1, sizeof(magic), fin ) != sizeof(magic)
-    || ! strncmp( magic, "VimCrypt~02", sizeof(magic) ) ) {
+    || strncmp( magic, "VimCrypt~02!", sizeof(magic) ) ) {
     EMSG( "input should be a vim-encrypted file\n" );
     return 1;
   }
@@ -37,6 +24,12 @@ int main( int argc, char *argv[] ) {
   if ( fread( salt, 1, sizeof(salt), fin ) != sizeof(salt)
     || fread( seed, 1, sizeof(seed), fin ) != sizeof(seed) ) {
     EMSG( "data ended prematurely\n" );
+    return 1;
+  }
+
+  char *pass = getpass( "password: " );
+  if ( pass[0] == '\0' ) {
+    EMSG( "empty password\n" );
     return 1;
   }
 

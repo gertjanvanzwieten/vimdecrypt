@@ -1,1 +1,3 @@
 vimdecrypt
+blowfish.so
+*.o

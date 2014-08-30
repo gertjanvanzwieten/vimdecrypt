@@ -12,10 +12,9 @@ required to unlock it.
 
 Vimdecrypt lifts two relevant files from the vim source, blowfish.c and
 sha256.c, and interfaces them in a simple command line tool. Data is read
-either from a file or from stdin, and decrypted data is written to stdout. 
+from a file, decrypted data is written to stdout. 
 
-    cat data | vimdecrypt
-    vimdecrypt data
+    vimdecrypt path_to_data
 
 The password is obtained via GNU getpass which does not interfere with
 stdin/stdout redirection.

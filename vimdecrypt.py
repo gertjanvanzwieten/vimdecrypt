@@ -1,4 +1,4 @@
-import sys, getpass, cffi
+import sys, os, getpass, cffi
 
 ffi = cffi.FFI()
 ffi.cdef( '''
@@ -7,7 +7,8 @@ ffi.cdef( '''
   void bf_cfb_init( char_u *iv, int iv_len );
   void bf_crypt_decode( char_u *ptr, long len );
 ''' )
-blowfish = ffi.dlopen( 'blowfish.so' )
+
+blowfish = ffi.dlopen( os.path.join( os.path.dirname(__file__), 'blowfish.so' ) )
 
 def decrypt( filename ):
   with open( filename ) as data:
@@ -16,7 +17,7 @@ def decrypt( filename ):
     seed = data.read(8)
     assert len(salt) == len(seed) == 8, 'data ended prematurely'
     buf = ffi.new( "unsigned char[]", data.read() )
-  pw = getpass.getpass()
+  pw = getpass.getpass( 'password: ' )
   assert pw, 'empty password'
   blowfish.bf_key_init( pw, salt, len(salt) )
   blowfish.bf_cfb_init( seed, len(seed) )
@@ -25,5 +26,5 @@ def decrypt( filename ):
 
 if __name__ == '__main__':
   if len(sys.argv) != 2:
-    sys.exit( 'usage: %s [filename]' % sys.argv[0] )
+    sys.exit( 'usage: %s [filename]' % os.path.basename(__file__) )
   print decrypt( sys.argv[1] )

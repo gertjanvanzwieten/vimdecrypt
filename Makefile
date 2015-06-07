@@ -1,7 +1,7 @@
 all: vimdecrypt blowfish.so
 
 %.o: %.c
-	gcc -O2 -c $<
+	gcc -O2 -fPIC -c $<
 
 vimdecrypt: vimdecrypt.o sha256.o blowfish.o
 	gcc $^ -o $@

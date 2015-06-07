@@ -1,15 +1,13 @@
 from __future__ import print_function
-import sys, os, getpass, cffi
+import sys, os, getpass, ctypes
 
-ffi = cffi.FFI()
-ffi.cdef( '''
-  typedef unsigned char char_u;
-  void bf_key_init( char_u *password, char_u *salt, int salt_len );
-  void bf_cfb_init( char_u *iv, int iv_len );
-  void bf_crypt_decode( char_u *ptr, long len );
-''' )
+dirname = os.path.dirname(__file__)
+blowfishpath = os.path.join( dirname, 'blowfish.so' )
+blowfish = ctypes.cdll.LoadLibrary( blowfishpath )
 
-blowfish = ffi.dlopen( os.path.join( os.path.dirname(__file__), 'blowfish.so' ) )
+# void bf_key_init( unsigned char *password, unsigned char *salt, int salt_len );
+# void bf_cfb_init( unsigned char *iv, int iv_len );
+# void bf_crypt_decode( unsigned char *ptr, long len );
 
 def decrypt( filename ):
   with open( filename, 'rb' ) as data:
@@ -17,13 +15,13 @@ def decrypt( filename ):
     salt = data.read(8)
     seed = data.read(8)
     assert len(salt) == len(seed) == 8, 'data ended prematurely'
-    buf = ffi.new( "unsigned char[]", data.read() )
+    buf = ctypes.create_string_buffer( data.read() )
   pw = getpass.getpass( 'password: ' )
   assert pw, 'empty password'
-  blowfish.bf_key_init( pw.encode(), salt, len(salt) )
-  blowfish.bf_cfb_init( seed, len(seed) )
-  blowfish.bf_crypt_decode( buf, len(buf)-1 );
-  return ffi.string( buf ).decode()
+  blowfish.bf_key_init( pw.encode(), salt, ctypes.c_int(len(salt)) )
+  blowfish.bf_cfb_init( seed, ctypes.c_int(len(seed)) )
+  blowfish.bf_crypt_decode( buf, ctypes.c_long(len(buf)-1) );
+  return buf.value
 
 if __name__ == '__main__':
   if len(sys.argv) != 2:

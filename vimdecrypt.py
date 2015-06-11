@@ -21,7 +21,7 @@ def decrypt( filename ):
   blowfish.bf_key_init( pw.encode(), salt, ctypes.c_int(len(salt)) )
   blowfish.bf_cfb_init( seed, ctypes.c_int(len(seed)) )
   blowfish.bf_crypt_decode( buf, ctypes.c_long(len(buf)-1) );
-  return buf.value
+  return buf.value.decode()
 
 if __name__ == '__main__':
   if len(sys.argv) != 2:

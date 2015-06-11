@@ -10,7 +10,7 @@ blowfish.so: blowfish.o sha256.o
 	gcc -shared -fPIC $^ -o $@
 
 clean:
-	rm *.o
+	rm -f *.o
 
 .PHONY: all clean
 	

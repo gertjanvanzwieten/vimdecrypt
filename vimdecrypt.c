@@ -15,9 +15,20 @@ int main( int argc, char *argv[] ) {
 
   char magic[12];
   if ( fread( magic, 1, sizeof(magic), fin ) != sizeof(magic)
-    || strncmp( magic, "VimCrypt~02!", sizeof(magic) ) ) {
+    || strncmp( magic, "VimCrypt~0", 10 )
+    || magic[10] != '2' && magic[10] != '3'
+    || magic[11] != '!' ) {
     EMSG( "input should be a vim-encrypted file\n" );
     return 1;
+  }
+
+  cryptstate_T state;
+  if ( magic[10] == '2' ) {
+    state.method_nr = 1; // blowfish
+    fprintf( stderr, "warning: file uses weak encryption\n" );
+  }
+  else {
+    state.method_nr = 2; // blowfish2
   }
 
   char salt[8], seed[8];
@@ -33,8 +44,7 @@ int main( int argc, char *argv[] ) {
     return 1;
   }
 
-	bf_key_init( pass, salt, sizeof(salt) );
-	bf_ofb_init( seed, sizeof(seed) );
+  crypt_blowfish_init( &state, pass, salt, sizeof(salt), seed, sizeof(seed) );
 
   char buf[ 256 ];
   int nread;
@@ -43,7 +53,7 @@ int main( int argc, char *argv[] ) {
     if ( nread == 0 ) {
       break;
     }
-    bf_crypt_decode( buf, nread );
+    crypt_blowfish_decode( &state, buf, nread, buf );
     fwrite( buf, 1, nread, stdout );
   }
 

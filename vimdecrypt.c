@@ -34,7 +34,7 @@ int main( int argc, char *argv[] ) {
   }
 
 	bf_key_init( pass, salt, sizeof(salt) );
-	bf_cfb_init( seed, sizeof(seed) );
+	bf_ofb_init( seed, sizeof(seed) );
 
   char buf[ 256 ];
   int nread;

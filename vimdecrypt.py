@@ -6,7 +6,7 @@ blowfishpath = os.path.join( dirname, 'blowfish.so' )
 blowfish = ctypes.cdll.LoadLibrary( blowfishpath )
 
 # void bf_key_init( unsigned char *password, unsigned char *salt, int salt_len );
-# void bf_cfb_init( unsigned char *iv, int iv_len );
+# void bf_ofb_init( unsigned char *iv, int iv_len );
 # void bf_crypt_decode( unsigned char *ptr, long len );
 
 def decrypt( filename ):
@@ -19,7 +19,7 @@ def decrypt( filename ):
   pw = getpass.getpass( 'password: ' )
   assert pw, 'empty password'
   blowfish.bf_key_init( pw.encode(), salt, ctypes.c_int(len(salt)) )
-  blowfish.bf_cfb_init( seed, ctypes.c_int(len(seed)) )
+  blowfish.bf_ofb_init( seed, ctypes.c_int(len(seed)) )
   blowfish.bf_crypt_decode( buf, ctypes.c_long(len(buf)-1) );
   return buf.value.decode()
 

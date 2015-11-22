@@ -14,7 +14,7 @@ class cryptstate_T( ctypes.Structure ):
 
 def decrypt( filename ):
   magics = None, b'VimCrypt~02!', b'VimCrypt~03!'
-  with open( filename, 'rb' ) as data:
+  with open( os.path.expanduser(filename), 'rb' ) as data:
     magic = data.read(12)
     assert magic in magics, 'input should be a vim-encrypted file'
     salt = data.read(8)

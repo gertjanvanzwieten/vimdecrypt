@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <stdlib.h>
 
 #define HAVE_CONFIG_H
 #define OK 1
@@ -39,5 +41,9 @@ void crypt_blowfish_init( cryptstate_T *state, char_u* key, char_u* salt, int	sa
 void crypt_blowfish_decode( cryptstate_T *state, char_u	*from, size_t	len, char_u	*to );
 
 char_u *sha256_key(char_u *buf, char_u *salt, int salt_len);
+
+// avoid implicit function definition warnings
+int sha256_self_test();
+int blowfish_self_test();
 
 #endif /* VIM__H */

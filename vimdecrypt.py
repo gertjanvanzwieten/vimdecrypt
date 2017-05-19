@@ -1,13 +1,8 @@
 from __future__ import print_function
 import sys, os, getpass, warnings, ctypes
 
-dirname = os.path.dirname(__file__)
-blowfishpath = os.path.join( dirname, 'blowfish.so' )
-blowfish = ctypes.cdll.LoadLibrary( blowfishpath )
-
-# typedef struct { int	method_nr; void *method_state; } cryptstate_T;
-# void crypt_blowfish_init( cryptstate_T *state, char_u* key, char_u* salt, int	salt_len, char_u* seed, int seed_len );
-# void crypt_blowfish_decode( cryptstate_T *state, char_u	*from, size_t	len, char_u	*to );
+libvimdecrypt = ctypes.cdll.LoadLibrary(
+  os.path.join( os.path.dirname(__file__), 'libvimdecrypt.so' ) )
 
 class cryptstate_T( ctypes.Structure ):
   _fields_ = ('method_nr', ctypes.c_int), ('method_state', ctypes.c_void_p)
@@ -26,8 +21,8 @@ def decrypt( filename ):
     warnings.warn( 'file uses weak encryption' )
   pw = getpass.getpass( 'password: ' )
   assert pw, 'empty password'
-  blowfish.crypt_blowfish_init( ctypes.byref(state), pw.encode(), salt, ctypes.c_int(len(salt)), seed, ctypes.c_int(len(seed)) )
-  blowfish.crypt_blowfish_decode( ctypes.byref(state), buf, ctypes.c_long(len(buf)-1), buf );
+  libvimdecrypt.crypt_blowfish_init( ctypes.byref(state), pw.encode(), salt, ctypes.c_int(len(salt)), seed, ctypes.c_int(len(seed)) )
+  libvimdecrypt.crypt_blowfish_decode( ctypes.byref(state), buf, ctypes.c_long(len(buf)-1), buf );
   return buf.value.decode()
 
 if __name__ == '__main__':

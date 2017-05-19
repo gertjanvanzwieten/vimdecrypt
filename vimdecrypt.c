@@ -1,15 +1,18 @@
-#include "vim.h"
+#include "vimdecrypt.h"
+
+#include <string.h>
+#include <stdio.h>
 
 int main( int argc, char *argv[] ) {
 
   if ( argc != 2 ) {
-    EMSG( "usage: %s [filename]\n", argv[0] )
+    fprintf( stderr, "usage: %s [filename]\n", argv[0] );
     return 1;
   }
 
   FILE *fin = fopen( argv[1], "r" );
   if ( ! fin ) {
-    EMSG( "failed to open file '%s'\n", argv[1] )
+    fprintf( stderr, "failed to open file '%s'\n", argv[1] );
     return 1;
   }
 
@@ -18,7 +21,7 @@ int main( int argc, char *argv[] ) {
     || strncmp( magic, "VimCrypt~0", 10 )
     || magic[10] != '2' && magic[10] != '3'
     || magic[11] != '!' ) {
-    EMSG( "input should be a vim-encrypted file\n" );
+    fprintf( stderr, "input should be a vim-encrypted file\n" );
     return 1;
   }
 
@@ -34,13 +37,13 @@ int main( int argc, char *argv[] ) {
   char salt[8], seed[8];
   if ( fread( salt, 1, sizeof(salt), fin ) != sizeof(salt)
     || fread( seed, 1, sizeof(seed), fin ) != sizeof(seed) ) {
-    EMSG( "data ended prematurely\n" );
+    fprintf( stderr, "data ended prematurely\n" );
     return 1;
   }
 
   char *pass = getpass( "password: " );
   if ( pass[0] == '\0' ) {
-    EMSG( "empty password\n" );
+    fprintf( stderr, "empty password\n" );
     return 1;
   }
 

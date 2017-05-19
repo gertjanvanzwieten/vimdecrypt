@@ -1,7 +1,11 @@
 #ifndef VIM__H
 #define VIM__H
 
-#include <unistd.h>
+// Minimal header file for compilation of unmodified blowfish.c and
+// sha256.c from upream vim source.
+
+#include "vimdecrypt.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -25,24 +29,13 @@
 
 typedef unsigned int UINT32_T;
 typedef unsigned char char_u;
-
 typedef struct {
   UINT32_T total[2];
   UINT32_T state[8];
   char_u buffer[64];
 } context_sha256_T;
 
-typedef struct {
-  int	method_nr;
-  void *method_state; // method-specific state information
-} cryptstate_T;
-
-void crypt_blowfish_init( cryptstate_T *state, char_u* key, char_u* salt, int	salt_len, char_u* seed, int seed_len );
-void crypt_blowfish_decode( cryptstate_T *state, char_u	*from, size_t	len, char_u	*to );
-
 char_u *sha256_key(char_u *buf, char_u *salt, int salt_len);
-
-// avoid implicit function definition warnings
 int sha256_self_test();
 int blowfish_self_test();
 

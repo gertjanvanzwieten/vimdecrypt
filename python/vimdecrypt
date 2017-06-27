@@ -1,0 +1,14 @@
+#! /usr/bin/python
+
+from __future__ import print_function
+import vimdecrypt, sys
+
+if len(sys.argv) != 2:
+  sys.exit('usage: {} [filename]'.format(sys.argv[0]))
+
+try:
+  data = vimdecrypt.decrypt(sys.argv[1])
+except Exception as e:
+  sys.exit('error: {}'.format(e))
+else:
+  print(data)

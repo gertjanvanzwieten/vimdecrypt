@@ -1,5 +1,5 @@
-vimdecrypt: vimdecrypt.c libvimdecrypt.so
-	gcc -L. -lvimdecrypt vimdecrypt.c -o $@
+vimdecrypt: vimdecrypt.c blowfish.o sha256.o
+	gcc $^ -o $@
 
 libvimdecrypt.so: blowfish.o sha256.o
 	gcc -shared -fPIC $^ -o $@

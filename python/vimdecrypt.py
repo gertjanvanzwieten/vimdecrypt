@@ -1,15 +1,14 @@
 from __future__ import print_function
-import sys, os, getpass, warnings, ctypes
+import getpass, warnings, ctypes
 
-libvimdecrypt = ctypes.cdll.LoadLibrary(
-  os.path.join( os.path.dirname(__file__), 'libvimdecrypt.so' ) )
+libvimdecrypt = ctypes.cdll.LoadLibrary('libvimdecrypt.so')
 
 class cryptstate_T( ctypes.Structure ):
   _fields_ = ('method_nr', ctypes.c_int), ('method_state', ctypes.c_void_p)
 
 def decrypt( filename ):
   method_nr = { b'VimCrypt~02!':1, b'VimCrypt~03!':2 }
-  with open( os.path.expanduser(filename), 'rb' ) as data:
+  with open( filename, 'rb' ) as data:
     magic = data.read(12)
     assert magic in method_nr, 'input should be a vim-encrypted file'
     salt = data.read(8)
@@ -25,7 +24,8 @@ def decrypt( filename ):
   libvimdecrypt.crypt_blowfish_decode( ctypes.byref(state), buf, ctypes.c_long(len(buf)-1), buf );
   return buf.value.decode()
 
-if __name__ == '__main__':
+def cli():
+  import sys
   if len(sys.argv) != 2:
-    sys.exit( 'usage: %s [filename]' % os.path.basename(__file__) )
+    sys.exit( 'usage: {} [filename]'.format( sys.argv[0] ) )
   print( decrypt( sys.argv[1] ) )

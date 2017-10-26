@@ -4,8 +4,9 @@ import setuptools
 
 setuptools.setup(
   name='vimdecrypt',
-  version='1.0',
+  version='2.0',
   author='Gertjan van Zwieten',
   py_modules=['vimdecrypt'],
   scripts=['vimdecrypt'],
+  test_suite='vimdecrypt',
 )

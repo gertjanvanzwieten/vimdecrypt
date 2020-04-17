@@ -4,4 +4,5 @@ src/*.o
 python/build/
 python/dist/
 python/vimdecrypt.egg-info/
-python/*.pyc
+*.pyc
+.*

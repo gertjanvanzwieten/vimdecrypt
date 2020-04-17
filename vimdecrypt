@@ -2,8 +2,19 @@
 
 import sys, vimdecrypt
 
-if len(sys.argv) != 2:
-  sys.exit('usage: vimdecrypt [path]')
+if len(sys.argv) != 2 and len(sys.argv) != 3:
+  print(len(sys.argv))
+  sys.exit('usage: vimdecrypt [path] [password (optional)]')
 
 with open(sys.argv[1], 'rb') as f:
-  print(vimdecrypt.decrypt(f))
+  if len(sys.argv) == 3:
+    if sys.argv[2] == "-":
+      # Decrypt using stdin
+      with open(0, 'r') as stdin:
+        print(vimdecrypt.decrypt(f, stdin.read().rstrip()))
+    else:
+      # Decrypt using passed in password
+      print(vimdecrypt.decrypt(f, sys.argv[2]))
+  else:
+    # Ask for password
+    print(vimdecrypt.decrypt(f))

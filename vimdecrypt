@@ -3,7 +3,6 @@
 import sys, vimdecrypt
 
 if len(sys.argv) != 2 and len(sys.argv) != 3:
-  print(len(sys.argv))
   sys.exit('usage: vimdecrypt [path] [password (optional)]')
 
 with open(sys.argv[1], 'rb') as f:

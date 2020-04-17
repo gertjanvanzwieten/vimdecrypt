@@ -60,7 +60,7 @@ docker run -it -v $(pwd):/local vertoforce/vimdecrypt /local/file.txt
 Or by passing the password in via stdin
 
 ```sh
-echo "password" | docker run -it -v $(pwd):/local vertoforce/vimdecrypt /local/file.txt -
+echo "password" | docker run -i -v $(pwd):/local vertoforce/vimdecrypt /local/file.txt -
 ```
 
 ## credits

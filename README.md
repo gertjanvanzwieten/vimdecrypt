@@ -36,6 +36,10 @@ With `~/.local/bin` in your executable path, decrypt any file to stdout using:
 
     $ vimdecrypt [somefile]
 
+Or passing in via stdin
+
+    $ echo "password" | vimdecrypt [somefile] -
+
 Note that the password is obtained via GNU getpass which does not interfere
 with stdin/stdout redirection.
 
@@ -44,6 +48,20 @@ The Python module defines only the `decrypt` method:
     >>> import vimdecrypt
     >>> with open('somefile', 'rb') as f:
     >>>   text = vimdecrypt.decrypt(f)
+
+### Docker
+
+Run in docker using this command
+
+```sh
+docker run -it -v $(pwd):/local vertoforce/vimdecrypt /local/file.txt
+```
+
+Or by passing the password in via stdin
+
+```sh
+echo "password" | docker run -it -v $(pwd):/local vertoforce/vimdecrypt /local/file.txt -
+```
 
 ## credits
 

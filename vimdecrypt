@@ -9,7 +9,7 @@ with open(sys.argv[1], 'rb') as f:
   if len(sys.argv) == 3:
     if sys.argv[2] == "-":
       # Decrypt using stdin
-      with open(0, 'r') as stdin:
+      with open(0, 'r') as stdin: # 0 is the filedescriptor for stdin
         print(vimdecrypt.decrypt(f, stdin.read().rstrip()))
     else:
       # Decrypt using passed in password

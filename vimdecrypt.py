@@ -21,6 +21,9 @@ def blowfish(key):
 
 
 def decrypt(f, pw=None, encoding='utf8'):
+  if isinstance(f, str):
+    with open(f, 'rb') as f:
+      return decrypt(f, pw, encoding)
   if f.read(12) != b'VimCrypt~03!':
     raise Exception('not a blowfish2-encoded vimcrypt file')
   salt = f.read(8)

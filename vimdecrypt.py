@@ -25,7 +25,7 @@ def decrypt(f, pw=None, encoding='utf8'):
     raise Exception('not a blowfish2-encoded vimcrypt file')
   salt = f.read(8)
   if pw is None:
-    pw = getpass.getpass('password: ')
+    pw = getpass.getpass()
   for i in range(1000):
     pw = hashlib.sha256(pw.encode() + salt).hexdigest()
   cipher = blowfish(hashlib.sha256(pw.encode() + salt).digest())

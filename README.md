@@ -34,7 +34,11 @@ setuptools:
 
 With `~/.local/bin` in your executable path, decrypt any file to stdout using:
 
-    $ vimdecrypt [somefile]
+    $ vimdecrypt [path]
+
+If the path argument is omitted then data is read from stdin:
+
+    $ cat somefile | vimdecrypt
 
 Note that the password is obtained via GNU getpass which does not interfere
 with stdin/stdout redirection.

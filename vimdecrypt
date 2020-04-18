@@ -2,8 +2,7 @@
 
 import sys, vimdecrypt
 
-if len(sys.argv) != 2:
+if len(sys.argv) > 2:
   sys.exit('usage: vimdecrypt [path]')
 
-with open(sys.argv[1], 'rb') as f:
-  print(vimdecrypt.decrypt(f))
+print(vimdecrypt.decrypt(sys.argv[1] if len(sys.argv) == 2 else sys.stdin.buffer))

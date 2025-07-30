@@ -7,4 +7,4 @@ requires-python = ">=3.0"
 dependencies = ["blowfish"]
 
 [project.scripts]
-vimdecrypt = "cli:main"
+vimdecrypt = "vimdecrypt.cli:main"

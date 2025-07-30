@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 
-import struct, hashlib, unittest, operator, getpass, sys
+import struct
+import hashlib
+import unittest
+import operator
+import getpass
+import sys
 
 
 def cli():
@@ -9,6 +14,10 @@ def cli():
 
     file = sys.argv[1] if len(sys.argv) == 2 else sys.stdin.buffer
     print(decrypt(file))
+
+
+def _swap_endianness(data):
+    return struct.pack("<2L", *struct.unpack(">2L", data))
 
 
 def blowfish(key):
@@ -24,8 +33,7 @@ def blowfish(key):
                 raise Exception("failed to import cryptographic module")
             return blowfish.Cipher(key, byte_order="little").encrypt_block
     bf = Blowfish.new(key, mode=Blowfish.MODE_ECB)
-    swapendian = lambda data: struct.pack("<2L", *struct.unpack(">2L", data))
-    return lambda data: swapendian(bf.encrypt(swapendian(data)))
+    return lambda data: _swap_endianness(bf.encrypt(_swap_endianness(data)))
 
 
 def decrypt(f, pw=None, encoding="utf8"):

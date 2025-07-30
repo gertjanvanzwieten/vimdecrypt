@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 
-import struct, hashlib, unittest, operator, getpass
+import struct, hashlib, unittest, operator, getpass, sys
+
+def cli():
+    if len(sys.argv) > 2:
+        sys.exit('usage: vimdecrypt [path]')
+
+    file = sys.argv[1] if len(sys.argv) == 2 else sys.stdin.buffer
+    print(decrypt(file))
 
 
 def blowfish(key):

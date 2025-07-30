@@ -25,10 +25,11 @@ or [blowfish](https://pypi.python.org/pypi/blowfish) to be installed.
 
 ## installation
 
-Both the Python module and the command line tool are installable via
-setuptools:
+Both the Python module and the command line tool are installable via Pip:
 
-    $ python setup.py install (--user)
+    $ pip install [--user]
+
+This will install the `blowfish` module by default
 
 ## usage
 

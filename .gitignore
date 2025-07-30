@@ -1,7 +1,3 @@
-src/vimdecrypt
-src/libvimdecrypt.so
-src/*.o
-python/build/
-python/dist/
-python/vimdecrypt.egg-info/
-python/*.pyc
+build/
+dist/
+vimdecrypt.egg-info/
